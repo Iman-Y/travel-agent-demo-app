@@ -18,6 +18,50 @@ A comprehensive travel application built with Next.js, TypeScript, and Tailwind 
 - **Styling**: Tailwind CSS
 - **Testing**: Jest + React Testing Library
 - **Linting**: ESLint with Next.js configuration
+- **Icons**: Lucide React
+- **Utilities**: clsx for conditional styling
+
+## Project Structure
+
+```
+travel-agent-demo-app/
+├── app/                    # Next.js App Router pages
+│   ├── layout.tsx         # Root layout with navigation
+│   ├── page.tsx           # Home page
+│   ├── trips/             # Trip search and details
+│   ├── bookings/          # Booking management
+│   ├── guides/            # Travel guides
+│   └── points/            # Loyalty points
+├── components/
+│   ├── ui/                # Reusable UI components (Button, Card, Input, Select)
+│   ├── layout/            # Header and Footer components
+│   ├── trips/             # Trip-specific components
+│   ├── bookings/          # Booking-specific components
+│   ├── guides/            # Guide-specific components
+│   └── __tests__/         # Component tests
+├── lib/
+│   ├── data/              # Mock data (mockData.ts)
+│   ├── services/          # Business logic layer (TripService, BookingService, etc.)
+│   ├── types/             # TypeScript type definitions
+│   └── utils.ts           # Utility functions (cn helper)
+├── public/                # Static assets
+├── tests/                 # Service and integration tests
+└── Docker files           # Containerization setup
+```
+
+## Architecture
+
+**Service Layer Pattern**: All data operations use static methods in `lib/services/index.ts`:
+- `TripService.searchTrips(filters)` - Complex filtering (destination, category, price, duration, rating)
+- `BookingService.createBooking()` - Generates IDs using timestamps
+- `GuideService.getGuidesByDestination()` - Case-insensitive matching
+
+**Component Architecture**:
+- **Server Components** (default): For data fetching and non-interactive UI
+- **Client Components** (`'use client'`): For interactivity, state, browser APIs
+- **UI System**: Reusable components in `components/ui/` with Tailwind variants
+
+**Mock Data**: All entities stored in `lib/data/mockData.ts` as arrays. Services operate on in-memory data with no external API calls.
 
 ## Getting Started
 
@@ -34,7 +78,7 @@ A comprehensive travel application built with Next.js, TypeScript, and Tailwind 
 
 ```powershell
 git clone <repository-url>
-Set-Location -Path copilot-agent-demo
+Set-Location -Path travel-agent-demo-app
 ```
 
 2. Install Node (if not already installed)
@@ -64,189 +108,3 @@ npm run dev
 
 5. Open the app in your browser: `http://localhost:3000`
 
-### Optional: Docker (Windows)
-
-If you prefer running the app with Docker Compose (development profile mounts the source for hot reload):
-
-```powershell
-# Development (hot-reload) - uses the `dev` profile
-docker-compose --profile dev up --build travel-app-dev
-
-# Production-like build
-docker-compose up --build
-```
-
-Notes:
-- When using Docker on Windows, ensure file sharing / volume mounts are enabled and your Docker resources (CPU/RAM) are sufficient for a Next.js dev server.
-- The repository provides `Dockerfile` and `Dockerfile.dev` for production and development images respectively.
-
-## Docker Support
-
-### Quick Start with Docker
-
-Run the application using Docker Compose:
-
-```bash
-# Build and run production version
-docker-compose up --build
-
-# Run development version with hot-reloading
-docker-compose --profile dev up --build travel-app-dev
-```
-
-### Manual Docker Commands
-
-```bash
-# Build the Docker image
-docker build -t travel-app .
-
-# Run the container
-docker run -p 3000:3000 travel-app
-
-# For development with hot-reloading
-docker build -f Dockerfile.dev -t travel-app-dev .
-docker run -p 3000:3000 -v $(pwd):/app -v /app/node_modules travel-app-dev
-```
-
-### GitHub Package Registry
-
-The application is automatically built and pushed to GitHub Package Registry on:
-- Push to `main` or `develop` branches
-- Tagged releases
-- Pull requests to `main`
-
-Pull the latest image:
-```bash
-docker pull ghcr.io/ravi-cheetiralaav/copilot-agent-demo:main
-```
-
-## Development Scripts
-
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
-- `npm run test` - Run tests
-- `npm run test:watch` - Run tests in watch mode
-
-## Project Structure
-
-```
-app/                    # Next.js App Router pages and layouts
-├── layout.tsx         # Root layout component
-├── page.tsx           # Home page
-├── trips/             # Trip-related pages
-├── guides/            # Travel guides pages
-├── bookings/          # Booking management pages
-├── points/            # Loyalty points page
-└── globals.css        # Global styles
-
-components/             # Reusable React components
-├── ui/                # Basic UI components (buttons, inputs, etc.)
-├── layout/            # Layout components (header, footer)
-├── trips/             # Trip-specific components
-├── guides/            # Guide-specific components
-├── bookings/          # Booking-specific components
-└── __tests__/         # Component tests
-
-lib/                   # Core logic and services
-├── types/             # TypeScript type definitions
-├── data/              # Mock data and data models
-├── services/          # Data service functions
-└── utils.ts           # Utility functions
-
-public/                # Static assets
-tests/                 # Test files and test utilities
-```
-
-## Features Overview
-
-### Trip Search
-- Advanced filtering by destination, category, price, duration, and rating
-- Interactive trip cards with detailed information
-- Individual trip detail pages with booking interface
-
-### Travel Guides
-- Expert-authored destination guides
-- Tag-based categorization
-- Rich content with images and reading time estimates
-
-### Booking Management
-- View all bookings with status tracking
-- Cancel bookings with confirmation
-- Detailed booking information including special requests
-
-### Loyalty Points System
-- Points earned based on booking value (1 point per $1 spent)
-- Membership tiers: Bronze, Silver, Gold, Platinum
-- Progress tracking and benefits overview
-- Bonus point opportunities
-
-## Code Standards
-
-### TypeScript
-- Strict typing enabled
-- Interfaces for all props and data structures
-- Proper type exports and imports
-
-### React Patterns
-- Functional components with hooks
-- Server components for data fetching
-- Client components marked with 'use client' directive
-- Proper separation of concerns
-
-### Styling Guidelines
-- Tailwind CSS classes prioritized
-- Consistent spacing and color schemes
-- Responsive design patterns
-- Accessibility considerations
-
-### Testing
-- Jest configuration for Next.js
-- React Testing Library for component tests
-- Service layer unit tests
-- Test coverage for critical paths
-
-## Development Guidelines
-
-### Before Each Commit
-1. Run `npm run lint` to ensure code standards
-2. Run `npm run test` to verify all tests pass
-3. Verify components follow Next.js App Router patterns
-4. Update documentation if adding new features
-
-### Component Development
-- Use TypeScript interfaces for all props
-- Follow single-responsibility principle
-- Implement proper error handling and loading states
-- Include meaningful alt text for images
-- Optimize for performance
-
-### Adding New Features
-1. Create types in `lib/types/`
-2. Add mock data in `lib/data/`
-3. Implement service functions in `lib/services/`
-4. Create reusable components in `components/`
-5. Build pages in `app/` directory
-6. Add tests for new functionality
-7. Update this README
-
-## API Structure
-
-The application uses mock data and service functions to simulate a backend API. Key services include:
-
-- **TripService**: Search trips, get trip details, featured trips
-- **GuideService**: Fetch travel guides, filter by destination
-- **BookingService**: Create bookings, manage user bookings
-
-## Contributing
-
-1. Follow the established code patterns
-2. Maintain TypeScript strict mode compliance
-3. Add tests for new components and functions
-4. Update documentation for new features
-5. Ensure responsive design implementation
-
-## License
-
-This project is part of a demo application for showcasing Next.js and modern web development practices.
