@@ -3,75 +3,68 @@
 
 We have a sample web app in "https://github.com/boq-ghcp-demos/travel-agent-demo-app" and want to do a simple deployment to Azure App Service.
 
-## PART 1 - Provisioning the infrastructure using Bicep
+## PART 1 - Provisioning the infrastructure for DEV, PREPROD and PROD environments using Bicep
 
-
+**PROMPT:**
 Please generate a Bicep template that creates:
-- Follow Azure naming rules, derive from the repo name and Chooses sensible environment-specific names for DEV, PREPROD and PROD and Resource groups
-- An App Service Plan (Linux)
-- Check the Repo to find out the specific tech stack used for this app
+- 3 resource groups:  <br/>
+  rg-travel-agent-demo-dev   <br/>
+  rg-travel-agent-demo-preprod   <br/>
+  rg-travel-agent-demo-prod   <br/>
+- An App Service Plan in each RG (Linux) by removing "rg-" from the RG name.
+- Check the GitHub Repo provided to find out the specific tech stack used for this app
 - Pick East US region and S1 tier Web Application
 
 
   
-## PART 2 - Creating a CI/CD pipeline in ADO with different stages such as DEV, PREPROD and PROD
+## PART 2 - Creating a CI/CD pipeline in ADO with different stages of DEV, PREPROD and PROD
 
 ### Step 1 — Scaffold multi-stage pipeline
 
 **Pre-requisits:**
 
+1- Create a Service Connection in Azure Devops - [Visit here for instructions](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops)
 
-Create a Service Connection in Azure Devops - [Visit here for instructions](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops)
-
-
-**Grant permissions via Azure Portal**
-
-Note: The service principal can't grant itself permissions. I'll remove the role assignment step from the pipeline and provide you with commands to grant the permission manually.
+2- Grant permissions via Azure Portal <br/>
+**Note:** The service principal can't grant itself permissions.  <br/>
+You can grant the `Contributor` permission manually:
 - Go to Azure Portal → Resource Group `rg-travel-agent-demo-dev`
 - Click Access control (IAM) → Add role assignment
 - Select  Contributor role
 - Click Next → Select User, group, or service principal
-- Search for your service principal (might be named "GHCP-Training" or the object ID)
+- Search for your service principal ( name or the ID)
 - Click Review + assign
+- repeat for `rg-travel-agent-demo-preprod` and `rg-travel-agent-demo-prod`
+<br/>
+or via azure CLI: 
+<br/>
 
+```
+# Get the service principal object ID and Subscription ID
+$spObjectId = "<Service Connector ID>"
+$subsId = "<Subscription ID>"
 
-#### Grant Contributor on DEV
-az role assignment create `
-  --assignee 827ff01c-8c15-4f10-8046-cf0de0fde848 `
-  --assignee-principal-type ServicePrincipal `
-  --role "Contributor" `
-  --scope "/subscriptions/7f4145d3-20d6-41d6-a06f-cde273a72575/resourceGroups/rg-travel-agent-demo-dev"
+# Grant Contributor role to DEV
+az role assignment create --assignee-object-id $spObjectId --assignee-principal-type ServicePrincipal --role "Contributor" --scope "/subscriptions/$subsId/resourceGroups/rg-travel-agent-demo-dev"
 
-#### Grant Contributor on PREPROD
-az role assignment create `
-  --assignee 827ff01c-8c15-4f10-8046-cf0de0fde848 `
-  --assignee-principal-type ServicePrincipal `
-  --role "Contributor" `
-  --scope "/subscriptions/7f4145d3-20d6-41d6-a06f-cde273a72575/resourceGroups/rg-travel-agent-demo-preprod"
+# Grant Contributor role to PREPROD
+az role assignment create --assignee-object-id $spObjectId --assignee-principal-type ServicePrincipal --role "Contributor" --scope "/subscriptions/$subsId/resourceGroups/rg-travel-agent-demo-preprod"
 
-#### Grant Contributor on PROD
-az role assignment create `
-  --assignee 827ff01c-8c15-4f10-8046-cf0de0fde848 `
-  --assignee-principal-type ServicePrincipal `
-  --role "Contributor" `
-  --scope "/subscriptions/7f4145d3-20d6-41d6-a06f-cde273a72575/resourceGroups/rg-travel-agent-demo-prod"
+# Grant Contributor role to PROD
+az role assignment create --assignee-object-id $spObjectId --assignee-principal-type ServicePrincipal --role "Contributor" --scope "/subscriptions/$subsId/resourceGroups/rg-travel-agent-demo-prod"
 
-  
+````
 
-**GHCP Pprompt**
+### Step 2 - GHCP Pprompt
 <br/>
 Create an Azure DevOps multi-stage YAML pipeline for this Node.js app that:
 
 - Uses an Azure Resource Manager service connection (you choose and reference the name)
-- Follows Azure naming rules, derives from the repo name and Chooses sensible environment-specific names for DEV, PREPROD and PROD and writes them into the YAML for App Service (web app) names and Resource groups
-- Creates related resource group for each environment using the naming instruction given to you.
-- Grant required permissions to the service conncion given to you as website contributor to each then using the bicep file you created earlier,then froceed with deploying the app and rest of the steps. 
-- Deploys the web app located in "https://github.com/boq-ghcp-demos/travel-agent-demo-app" to Azure App Service all the three environments
+- Deploys the web app located in "https://github.com/boq-ghcp-demos/travel-agent-demo-app" to Azure App Service all the three environments (DEV, PREPROD and PROD)
 - Publishes build output using the most reliable approach for multi-stage deployment and update the pipeline accordingly
 - Configures manual approval before the PROD stage via Azure DevOps Environments.
-- Considers the Previous bicep file will be uploaded next to the pipeline repo at the repo root.
+- Checks the GitHub Repo provided to find out the specific tech stack used for this app and grab required files from this repo. <br/>
+
 Save the pipeline as `azure-pipelines.yml` at the repo root and show the FULL YAML with the names you selected.
 
-### Step 2 - Create a ADO pipeline with YAML and upload `azure-pipelines.yml`  
-
-### Step 3 - Go to the Repos and upload `main.bicep` to the repo
+### Step 3 - Create a ADO pipeline with YAML and upload `azure-pipelines.yml`  
