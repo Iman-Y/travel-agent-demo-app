@@ -69,4 +69,10 @@ Create an Azure DevOps multi-stage YAML pipeline for this Node.js app that:
 
 Save the pipeline as `azure-pipelines.yml` at the repo root and show the FULL YAML with the names you selected.
 
-### Step 3 - Create a ADO pipeline with YAML and upload `azure-pipelines.yml`  
+### Step 3 - Create a ADO pipeline with YAML, upload `azure-pipelines.yml` and run the pipeline.
+
+<br/>
+
+## PART 3 - Deploying into Kubernetes
+
+
