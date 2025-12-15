@@ -12,10 +12,10 @@ Please generate a Bicep template that creates:
   rg-travel-agent-demo-preprod   <br/>
   rg-travel-agent-demo-prod   <br/>
 - An App Service Plan in each RG (Linux) by removing "rg-" from the RG name.
-- Check the GitHub Repo provided to find out the specific tech stack used for this app
-- Pick East US region and S1 tier Web Application
+- Check the GitHub Repo provided to find out the specific tech stack used for this app.
+- Pick East US region and S1 tier Web Application.
 
-
+**Note:** Make sure you have got enough quota in this region. Alternatively choose the region where you have required quota.
   
 ## PART 2 - Creating a CI/CD pipeline in ADO with different stages of DEV, PREPROD and PROD
 
@@ -59,9 +59,9 @@ az role assignment create --assignee-object-id $spObjectId --assignee-principal-
 <br/>
 Create an Azure DevOps multi-stage YAML pipeline for this Node.js app that:
 
-- Uses an Azure Resource Manager service connection (you choose and reference the name)
-- Deploys the web app located in "https://github.com/boq-ghcp-demos/travel-agent-demo-app" to Azure App Service all the three environments (DEV, PREPROD and PROD)
-- Clone the app repo to get the 
+- Uses an Azure Resource Manager service connection (you choose and reference the name).
+- Deploys the web app located in "https://github.com/boq-ghcp-demos/travel-agent-demo-app" to Azure App Service all the three environments (DEV, PREPROD and PROD).
+- Clone the app repo to get the required packages for npm install.
 - Publishes build output using the most reliable approach for multi-stage deployment and update the pipeline accordingly
 - Configures manual approval before the PROD stage via Azure DevOps Environments.
 - Checks the GitHub Repo provided to find out the specific tech stack used for this app and grab required files from this repo. <br/>
