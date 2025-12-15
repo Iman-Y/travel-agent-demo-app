@@ -101,13 +101,15 @@ This section adds a containerized path using AKS. Asking Copilot to:
 2. Kubernetes service connection (or ARM connection to AKS for private clusters/local accounts disabled).
 
 **PROMPT — provision AKS/ACR via Bicep**
+```
 Create Bicep that provisions per environment:
 - AKS clusters: aks-travel-agent-dev, aks-travel-agent-preprod, aks-travel-agent-prod (system nodepool, Linux)
 - ACR: acrtravelagent<uniqueSuffix> with Basic SKU
 - AKS pull permission to ACR
 Expose outputs for cluster names, kube API server, and ACR loginServer.
 Keep East US, parameterise node counts and vmSize.
-
+```
+<br/>
 **Note:** 
 AKS+Bicep quickstart and managedClusters schema for IaC for the clusters. [learn.microsoft.com], [learn.microsoft.com]
 
