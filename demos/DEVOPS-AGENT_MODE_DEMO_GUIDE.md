@@ -8,6 +8,7 @@ We have a sample web app at "https://github.com/boq-ghcp-demos/travel-agent-demo
 ## PART 1 - Provisioning the infrastructure for DEV, PREPROD and PROD environments using Bicep
 
 **PROMPT:**
+```
 Please generate a Bicep template that creates infrastructure in Azure for a wweb app located at "https://github.com/boq-ghcp-demos/travel-agent-demo-app":
 - 3 resource groups:  <br/>
   rg-travel-agent-demo-dev   <br/>
@@ -16,7 +17,7 @@ Please generate a Bicep template that creates infrastructure in Azure for a wweb
 - An App Service Plan in each RG (Linux) by removing "rg-" from the RG name.
 - Check the GitHub Repo provided to find out the specific tech stack used for this app.
 - Pick East US region and S1 tier Web Application.
-
+```
  
 ## PART 2 - Creating a CI/CD pipeline in ADO with different stages of DEV, PREPROD and PROD
 
@@ -58,6 +59,8 @@ az role assignment create --assignee-object-id $spObjectId --assignee-principal-
 
 ### Step 2 - GHCP Pprompt
 <br/>
+
+```
 Create an Azure DevOps multi-stage YAML pipeline for this Node.js app that:
 
 - Uses an Azure Resource Manager service connection (you choose and reference the name).
@@ -68,7 +71,9 @@ Create an Azure DevOps multi-stage YAML pipeline for this Node.js app that:
 - Checks the GitHub Repo provided to find out the specific tech stack used for this app and grab required files from this repo. <br/>
 
 Save the pipeline as `azure-pipelines.yml` at the repo root and show the FULL YAML with the names you selected.
+```
 
+<br/>
 ### Step 3 - Create a ADO pipeline with YAML, upload `azure-pipelines.yml` and run the pipeline.
 
 - Pipelines → New pipeline → GitHub → pick repo → YAML → select azure-pipelines.yml.
@@ -107,5 +112,28 @@ Keep East US, parameterise node counts and vmSize.
 AKS+Bicep quickstart and managedClusters schema for IaC for the clusters. [learn.microsoft.com], [learn.microsoft.com]
 
 
+MASTER PROMPT:
+```
 
+Extend the project to support deployment to Kubernetes (AKS). Please:
+
+1) Containerize the app:
+   - Create a production-ready Dockerfile and .dockerignore for Node.js.
+   - Choose sensible defaults for base image, ports, and start command from the repo.
+
+2) Generate Kubernetes artifacts:
+   - Provide either plain manifests (Deployment, Service, Ingress, ConfigMap, Namespace) or a Helm chart with environment-specific values (DEV, PREPROD, PROD)—you decide which path is simplest and robust.
+   - Parameterize image repo/tag, replicas, namespace, hostnames, and any ingress annotations you consider best practice.
+   - Keep API versions stable and the structure easy to maintain.
+
+3) Update the Azure DevOps pipeline:
+   - Add a container build/push stage to ACR using Docker@2.
+   - Add deploy stages for DEV, PREPROD, PROD to AKS using your preferred task (KubernetesManifest, HelmDeploy, or Kubectl).
+   - Include basic post-deploy health checks (you choose how).
+   - Require manual approval before PROD.
+   - Reference service connections by name and keep variable usage minimal.
+
+Save new files (Dockerfile, k8s/ or charts/) and show all YAML updates. Please decide most conventions automatically.
+
+```
   
