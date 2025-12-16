@@ -2,13 +2,13 @@
 
 This playbook shows how to leverage **GitHub Copilot and Copilot Chat (GHCP)** as your DevOps assistant to generate infrastructure-as-code, CI/CD pipelines, and Kubernetes deployment assets **from scratch**, by simply giving Copilot clear instructions.  
 
-We will work from your ideas in `my-ideas.txt`:
+We will work from your ideas in `myidea.txt`:
 
 ```Text
 We have a sample app https://github.com/boq-ghcp-demos/travel-agent-demo-app and want to deploy to different environments using Azure devops and Azure cloud.
 
 1. I want to deploy it in App Service, first show case provisioning the infra using Bicep.
-2. Creating a CI/CD pipeline in ADO with different stages like DevTest, PreProd and Prod.
+2. Creating a CI/CD pipeline in ADO with different stages like DEV, PREPROD and PROD.
 3. Consider deploying into Kubernetes, how do we create manifests, helm charts to support that deployment. 
 
 ```
